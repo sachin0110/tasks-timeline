@@ -1,0 +1,11 @@
+
+{
+    "/": {
+      "target": "https://61ee5f30d593d20017dbad98.mockapi.io",
+      "secure": false,
+      "pathRewrite": {
+        "^/": ""
+      },
+      "changeOrigin": true
+     }
+}
