@@ -12,4 +12,9 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openEmail(mailID: string){
+      window.open("mailto:"+ mailID);
+      // write your logic here
+  }
+
 }

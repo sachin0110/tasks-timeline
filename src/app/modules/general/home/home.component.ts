@@ -8,24 +8,19 @@ import {
 import {
   startOfDay,
   endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
   isSameDay,
-  isSameMonth,
-  addHours,
+  isSameMonth
 } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
-  // CalendarEventAction,
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
 import { NotesService } from '../../../services/notes.service';
 import { NoteLabelsService } from '../../../services/note-labels.service';
-import { Note, NoteLabel } from '../../../interface/note.interface';
+import { Note, NoteLabel, NoteLabelWithNotes } from '../../../interface/note.interface';
 
 const colors: any = {
   red: {
@@ -68,7 +63,7 @@ const colors: any = {
 export class HomeComponent {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
-  view: CalendarView = CalendarView.Week;
+  view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
 
@@ -109,36 +104,72 @@ export class HomeComponent {
     this._notesService.getNotes().subscribe((notes: any) => {
       console.log(notes);
       this.notesList;
-      this.parseNotestoEvents(notes.notes);
+      ;
+      this.parseNotestoEvents(this.mergeNotesIntoLabels(this.noteLabelList, notes.notes));
     }, error => {
       console.log(error);
 
     });
   }
 
-  parseNotestoEvents(notes: Array<Note>) {
+  // teamDropdownChanged(index: number) {
+  //   switch(index) {
+      
+  //     case 1:
+  //       this.events = this.events.filter((event) => event.id === 1 );
+  //     break;
+  //     case 2:
+  //       this.events = this.events.filter((event) => event.id === 2 );
+  //     break;
+  //     case 3:
+  //       this.events = this.events.filter((event) => event.id === 3 );
+  //     break;
+  //     default:
+  //       this.events = [
+  //         ...this.events];
+  //       break;
+  //   }
+  //   console.log(this.events);
+    
+  // }
+
+  mergeNotesIntoLabels(noteLabelsList: Array<NoteLabel>, notesList: Array<Note>) {
+
+    const noteLabelWithNotesList: Array<NoteLabelWithNotes> = [];
+        notesList.forEach((note: Note)=>{
+          // const notesLabel: Array<NoteLabelWithNotes> = [];
+          note.labels.forEach((noteLabelOfNote)=>{
+            noteLabelsList.forEach((noteLabel: NoteLabel)=>{
+              if(noteLabel.id===noteLabelOfNote) {
+                noteLabelWithNotesList.push({
+                  id: note.id,
+                  labelId: noteLabel.id,
+                  text: noteLabel.text,
+                  title: note.title,
+                  startDate: note.startDate,
+                  endDate: note.endDate,
+                  color: noteLabel.id===1?colors.red:noteLabel.id===2?colors.green:colors.yellow
+                })
+              }
+            })
+          })
+    })
+    return noteLabelWithNotesList;
+  }
+
+  parseNotestoEvents(notes: Array<NoteLabelWithNotes>) {
     console.log(notes);
     for (let i = 0; i < notes.length; i++) {
+
       this.events.push({
-        title: notes[i].title,
-        start: startOfDay(new Date(notes[i].startDate)),
-        end: endOfDay(new Date(notes[i].endDate)),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
+        id: notes[i].labelId,
+        title: notes[i].text.concat(': '+notes[i].title),
+        start: startOfDay(new Date(notes[i].startDate * 1000)),
+        end: endOfDay(new Date(notes[i].endDate * 1000)),
+        color: notes[i].color
       });
     }
     console.log(this.events);
-    
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: colors.red,
-    // }
 
   }
 
@@ -171,13 +202,8 @@ export class HomeComponent {
       }
       return iEvent;
     });
-    this.handleEvent('Dropped or resized', event);
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
-  }
 
   addEvent(): void {
     this.events = [

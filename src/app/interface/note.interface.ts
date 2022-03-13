@@ -1,13 +1,23 @@
 export interface Note {
-    id: Number,
+    id: number,
     title: string,
     startDate: number,
     endDate: number,
-    labels: Array<Number>,
+    labels: Array<number>,
 }
 
 export interface NoteLabel {
-    id: Number,
+    id: number,
     text: String
 
+}
+
+export interface NoteLabelWithNotes {
+    id: number,
+    labelId: number
+    text: String,
+    title: string,
+    startDate: number,
+    endDate: number,
+    color: any
 }

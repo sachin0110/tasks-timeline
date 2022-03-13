@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/general/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { httpInterceptorProviders } from './http-interceptors-provider';
+import { NgbModule }
+from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { httpInterceptorProviders } from './http-interceptors-provider';
     AppRoutingModule,
     FormsModule,
     NgbModalModule,
+    NgbModule,
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
       provide: DateAdapter,

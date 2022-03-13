@@ -11,7 +11,7 @@ const routes: Routes = [
   //   loadChildren: () => import('./modules/general/about/about.module')
   //     .then(mod => mod.AboutModule)
   // },
-  { path: '**', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
 
 ];
