@@ -1,0 +1,27 @@
+h1 {
+  color: rgb(64, 64, 119);
+}
+
+.app {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: auto;
+}
+
+menu {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  width: 150px;
+}
+
+li {
+  flex-grow: 1;
+  padding: 6px;
+  border-bottom: groove;
+  border-right: ridge;
+  background-color: lavender;
+}
+
+a {
+  width: 100%;
+}

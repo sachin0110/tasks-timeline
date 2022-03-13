@@ -1,0 +1,6 @@
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+body {
+	color: black;
+	font-weight: 400;
+}
