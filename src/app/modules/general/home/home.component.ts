@@ -21,6 +21,7 @@ import {
 import { NotesService } from '../../../services/notes.service';
 import { NoteLabelsService } from '../../../services/note-labels.service';
 import { Note, NoteLabel, NoteLabelWithNotes } from '../../../interface/note.interface';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 const colors: any = {
   red: {
@@ -80,17 +81,20 @@ export class HomeComponent {
   refresh = new Subject<void>();
 
   events: CalendarEvent[] = [];
-
+  stringifyEvents: string = '';
+  registrationForm: FormGroup;
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal, private _notesService: NotesService, private _noteLabelService: NoteLabelsService) {
-
+  constructor(private modal: NgbModal, public fb: FormBuilder, private _notesService: NotesService, private _noteLabelService: NoteLabelsService) {
+    this.registrationForm = this.fb.group({
+      teamName: ['', [Validators.required]],
+    });
     this.getNotesLabels();
   }
 
 
   getNotesLabels() {
-    this._noteLabelService.getNoteLabels().subscribe((noteLabels: any) => {
+    this._noteLabelService.getNoteLabels().subscribe((noteLabels: Array<NoteLabel>) => {
       console.log(noteLabels);
       this.noteLabelList = noteLabels;
       this.getNotes();
@@ -112,26 +116,27 @@ export class HomeComponent {
     });
   }
 
-  // teamDropdownChanged(index: number) {
-  //   switch(index) {
+  teamDropdownChanged(index: number) {
+    const eventsList: CalendarEvent[] = JSON.parse(this.stringifyEvents);
+    switch(index) {
       
-  //     case 1:
-  //       this.events = this.events.filter((event) => event.id === 1 );
-  //     break;
-  //     case 2:
-  //       this.events = this.events.filter((event) => event.id === 2 );
-  //     break;
-  //     case 3:
-  //       this.events = this.events.filter((event) => event.id === 3 );
-  //     break;
-  //     default:
-  //       this.events = [
-  //         ...this.events];
-  //       break;
-  //   }
-  //   console.log(this.events);
+      case 1:
+        this.events = [...eventsList.filter((event) => event.id === 1 )];
+      break;
+      case 2:
+        this.events = [...eventsList.filter((event) => event.id === 2 )];
+      break;
+      case 3:
+        this.events = [...eventsList.filter((event) => event.id === 3 )];
+      break;
+      default:
+        this.events = [
+          ...this.events];
+        break;
+    }
+    console.log(this.events);
     
-  // }
+  }
 
   mergeNotesIntoLabels(noteLabelsList: Array<NoteLabel>, notesList: Array<Note>) {
 
@@ -169,6 +174,7 @@ export class HomeComponent {
         color: notes[i].color
       });
     }
+    this.stringifyEvents = JSON.stringify(this.events);
     console.log(this.events);
 
   }

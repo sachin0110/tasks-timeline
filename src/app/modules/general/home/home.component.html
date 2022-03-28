@@ -55,13 +55,21 @@
       </div>
     </div>
     <!-- <div class="col-md-3">
-      <label>Team : </label>
 
-      <select #mySelect [(ngModel)] = "noteLabelList" (change)="teamDropdownChanged(mySelect.selectedIndex)"> 
-          
-        <option selected [ngValue]="">All</option>  
-        <option *ngFor="let noteLabel of noteLabelList" [ngValue]="noteLabel.text">{{noteLabel.text}}</option>
-      </select>
+      <form [formGroup]="registrationForm">
+        <div class="d-grid">
+          <select #mySelect
+            class="custom-select mb-3"
+            (change)="teamDropdownChanged(mySelect.selectedIndex)"
+            formControlName="teamName"
+          >
+            <option value="">Choose City</option>
+            <option *ngFor="let noteLabel of noteLabelList" [ngValue]="noteLabel.id">
+              {{ noteLabel.text }}
+            </option>
+          </select>
+        </div>
+      </form>
     </div> -->
   </div>
 
